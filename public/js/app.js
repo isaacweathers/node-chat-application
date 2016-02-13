@@ -1,4 +1,4 @@
-var app = angular.module('myChatApp', ['ngRoute']);
+var app = angular.module('myChatApp', ['ngRoute', 'cgNotify']);
 app.config(['$routeProvider', function($routeProvider) {
 	$routeProvider
 		.when('/', {

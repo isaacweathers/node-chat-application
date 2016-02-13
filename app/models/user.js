@@ -1,6 +1,7 @@
 var exports = module.exports = {};
 var mongoose = require('mongoose'), Schema = mongoose.Schema;
 var validate = require('mongoose-validator');
+var uniqueValidator = require('mongoose-unique-validator');
 
 var usernameValidator = [
 	validate({
@@ -16,10 +17,12 @@ var usernameValidator = [
 ];
 
 exports.userSchema = new Schema({
-	username: {type: String, validate: usernameValidator },
+	username: {type: String, unique: true},
 	password: {type: String}
 });
 
 exports.userSchema.methods.name = function () {
 		console.log(this.username);
 }
+
+exports.userSchema.plugin(uniqueValidator, {message: "That username has already been taken."});

@@ -1,4 +1,4 @@
-app.controller('HomeCtrl', function($scope, $http) {
+app.controller('HomeCtrl', function($scope, $http, notify) {
 	$scope.username = '',
 	$scope.password = '';
 	$scope.login = function() {

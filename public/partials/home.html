@@ -3,3 +3,6 @@
 	<label for="password">Password</label><input name="password" ng-model="user.password" type="password">
 	<input type="submit"/>
 </form>
+<span ng-repeat="user in users">
+	<span ng-bind="user.username"></span>
+</span>

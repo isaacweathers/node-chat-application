@@ -13,6 +13,7 @@ var db = mongoose.connection;
 
 app.use(express.static('public'));
 app.use(express.static('node_modules'));
+app.use(express.static('bower_components'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
