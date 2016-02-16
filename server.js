@@ -19,18 +19,21 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
+// ROUTING
+
 app.get('/', function(req,res) {
     res.sendFile(path.join(__dirname + '/index.html'));
 });
 
 app.post('/register-action', function(req, res) {
-	var new_user = new User(req.body);
-	new_user.save(function(err, new_user) {
-		if (err) {
-			console.log(err.errors.username.message);
-			res.send(200, err.errors.username.message);
-		}
-		res.send(200, new_user);
+	userModule.userSchema.methods.register(req.body.username, req.body.password, function(response) {
+		res.send(200, response);
+	});
+});
+
+app.post('/login-action', function(req, res) {
+	userModule.userSchema.methods.login(req.body.username, req.body.password, function(response) {
+		res.send(200, response);
 	});
 });
 

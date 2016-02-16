@@ -13,4 +13,15 @@ app.controller('HomeCtrl', function($scope, $http, notify) {
 			alert("Registration successful!");
 		});
 	}
+
+	$scope.login = function(user) {
+		$http.post('/login-action', user).then(function(response) {
+			console.log(response);
+			if (typeof(response.data) !== 'object') {
+				alert(response.data);
+				return false;
+			}
+			alert("You have signed in!");	
+		});
+	}
 });
