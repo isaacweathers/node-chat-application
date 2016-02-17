@@ -1,9 +1,8 @@
-app.controller('HomeCtrl', function($scope, $http, notify) {
+app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessionStorage) {
 	$scope.username = '',
 	$scope.password = '';
-	$scope.login = function() {
+	$scope.$session = $sessionStorage;
 
-	},
 	$scope.register = function(user) {
 		$http.post('/register-action', user).then(function(response) {
 			if (typeof(response.data) !== 'object') {
@@ -12,7 +11,7 @@ app.controller('HomeCtrl', function($scope, $http, notify) {
 			}
 			alert("Registration successful!");
 		});
-	}
+	},
 
 	$scope.login = function(user) {
 		$http.post('/login-action', user).then(function(response) {
@@ -21,7 +20,23 @@ app.controller('HomeCtrl', function($scope, $http, notify) {
 				alert(response.data);
 				return false;
 			}
-			alert("You have signed in!");	
+			alert("You have signed in!");
+			// Initialize Session'
+			console.log(response.data._id);
+			$scope.$session._id = response.data._id;
 		});
+	},
+
+	$scope.logout = function() {
+		if ($scope.$session._id) {
+			$http.post('/logout-action').then(function(response) {
+				console.log(response);
+				if (response.data == "OK")
+					$scope.$session._id = '';
+			});
+		} else {
+			alert('You are not logged in.');
+			$scope.$session._id = '';
+		}
 	}
 });

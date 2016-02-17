@@ -63,15 +63,18 @@ app.post('/register-action', function(req, res) {
 });
 
 app.post('/login-action', passport.authenticate('local', {successRedirect: '/success', failureRedirect: '/failure'}),function(req, res) {
+});
 
+app.post('/logout-action', function(req, res) {
+	req.logout();
+	res.send(200, "OK");
 });
 
 app.get('/success', function(req, res) {
-	res.send({status: 'OK'});
+	res.send(req.user);
 });
 
 app.get('/failure', function(req, res) {
-	console.log(req.user);
 	res.send("");
 })
 
