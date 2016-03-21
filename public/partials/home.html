@@ -25,4 +25,9 @@
 </div>
 <div ng-if="$session._id" class='col-lg-12'>
 	<button ng-click="logout()" class="btn btn-primary">Logout</button>
+	<form id="myForm" ng-submit="sendMessage(message)">
+		<textarea ng-model="message" id="message"></textarea>
+		<input type="submit"/>
+	</form>
+	<div id="chatBox"></div>
 </div>

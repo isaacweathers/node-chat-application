@@ -1,4 +1,4 @@
-var app = angular.module('myChatApp', ['ngRoute', 'cgNotify', 'ngStorage']);
+var app = angular.module('myChatApp', ['ngRoute', 'cgNotify', 'ngStorage', 'ngWebSocket']);
 app.config(['$routeProvider', function($routeProvider) {
 	$routeProvider
 		.when('/', {
@@ -6,3 +6,5 @@ app.config(['$routeProvider', function($routeProvider) {
 			controller: 'HomeCtrl'
 		});
 }]);
+
+app.value('io', io);

@@ -1,7 +1,13 @@
-app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessionStorage) {
+app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessionStorage, $websocket, io) {
 	$scope.username = '',
 	$scope.password = '';
 	$scope.$session = $sessionStorage;
+	var socket = io();
+
+	socket.on('new message', function(data) {
+		console.log(data);
+		$('#chatBox').append("<div>"+data.msg+"</div>")
+	});
 
 	$scope.register = function(user) {
 		$http.post('/register-action', user).then(function(response) {
@@ -38,5 +44,9 @@ app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessi
 			alert('You are not logged in.');
 			$scope.$session._id = '';
 		}
+	}
+
+	$scope.sendMessage = function(data) {
+		socket.emit('send message', data);	
 	}
 });
