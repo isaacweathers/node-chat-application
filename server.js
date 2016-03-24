@@ -18,8 +18,8 @@ connections = [];
 // Application settings
 
 http.listen(8000, function() {
-	console.log("Fuck you all.");	
-})
+	console.log("Listening on port 8000...");
+});
 
 app.use(express.static('public'));
 app.use(express.static('node_modules'));
@@ -29,9 +29,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+
 app.use(session({
 	secret: 'keyboard cat'
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -40,21 +42,19 @@ app.use(passport.session());
 
 io.sockets.on('connection', function(socket) {
 	connections.push(socket);
-	console.log('Connected: %s sockets connected.', connections.length);
-
+	io.emit('signed on', {users: connections.length });
 	socket.on('upgrade', function(data) {
-		
 	});
 
 	socket.on('disconnect', function(data) {
 		connections.splice(connections.indexOf(socket), 1);
-		console.log("Disconnected %s sockets connected", connections.length)
+		io.emit('signed off', {users: connections.length });
 	});
 
 	socket.on('send message', function(data) {
 		console.log(data);
 		io.emit('new message', {msg: data});
-	})
+	});
 });
 
 // Authentication

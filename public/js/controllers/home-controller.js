@@ -2,12 +2,23 @@ app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessi
 	$scope.username = '',
 	$scope.password = '';
 	$scope.$session = $sessionStorage;
+	$scope.message;
+	$scope.usersOn = 0;
 	var socket = io();
 
 	socket.on('new message', function(data) {
-		console.log(data);
-		$('#chatBox').append("<div>"+data.msg+"</div>")
+		$('#chatBox').append("<div>"+data.msg+"</div>");
 	});
+
+	socket.on('signed on', function(data) {
+		$scope.usersOn = data.users;
+		$scope.$apply();
+	});
+
+	socket.on('signed off', function(data) {
+		$scope.usersOn = data.users;
+		$scope.$apply();
+	})
 
 	$scope.register = function(user) {
 		$http.post('/register-action', user).then(function(response) {
@@ -28,7 +39,6 @@ app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessi
 			}
 			alert("You have signed in!");
 			// Initialize Session'
-			console.log(response.data._id);
 			$scope.$session._id = response.data._id;
 		});
 	},
@@ -47,6 +57,9 @@ app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessi
 	}
 
 	$scope.sendMessage = function(data) {
+		console.log($scope.message);
+		console.log($scope);
+		$scope.message = "";
 		socket.emit('send message', data);	
 	}
 });
