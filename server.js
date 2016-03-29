@@ -41,18 +41,32 @@ app.use(passport.session());
 // Web Sockets 
 
 io.sockets.on('connection', function(socket) {
-	connections.push(socket);
-	io.emit('signed on', {users: connections.length });
-	socket.on('upgrade', function(data) {
+
+	io.emit('anon sign on', {users: connections.length });
+
+	socket.on('logged in user', function(user) {
+		socket.user = user;
+		connections.push(socket);
+		io.emit('logged in user', {users: connections.length, user: user});
 	});
 
-	socket.on('disconnect', function(data) {
-		connections.splice(connections.indexOf(socket), 1);
-		io.emit('signed off', {users: connections.length });
+	socket.on('signed off', function() {
+		if (socket.user != undefined) {
+			var username = socket.user.username;
+			connections.splice(connections.indexOf(socket), 1);
+			io.emit('signed off', {users: connections.length, user: username});
+		}	
+	});
+
+	socket.on('disconnect', function() {
+		if (socket.user != undefined) {
+			var username = socket.user.username;
+			connections.splice(connections.indexOf(socket), 1);
+			io.emit('signed off', {users: connections.length, user: username});
+		}
 	});
 
 	socket.on('send message', function(data) {
-		console.log(data);
 		io.emit('new message', {msg: data});
 	});
 });

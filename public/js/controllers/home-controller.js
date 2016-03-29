@@ -7,17 +7,25 @@ app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessi
 	$scope.usersOn = 0;
 	var socket = io();
 
-	socket.on('new message', function(data) {
-		$('#chatBox').append("<div>"+data.msg+"</div>");
+	socket.on('logged in user', function(data) {
+		$scope.messages.push({message: data.user.username + " has signed on!"});
+		$scope.usersOn = data.users;	
+		$scope.$apply();
 	});
 
-	socket.on('signed on', function(data) {
+	socket.on('new message', function(data) {
+		$scope.messages.push({message: data.msg });
+		$scope.$apply();
+	});
+
+	socket.on('anon sign on', function(data) {
 		$scope.usersOn = data.users;
 		$scope.$apply();
 	});
 
 	socket.on('signed off', function(data) {
 		$scope.usersOn = data.users;
+		$scope.messages.push({message: data.user + " has signed off!" });
 		$scope.$apply();
 	})
 
@@ -41,6 +49,7 @@ app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessi
 			alert("You have signed in!");
 			// Initialize Session'
 			$scope.$session._id = response.data._id;
+			socket.emit('logged in user', user);
 		});
 	},
 
@@ -48,8 +57,10 @@ app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessi
 		if ($scope.$session._id) {
 			$http.post('/logout-action').then(function(response) {
 				console.log(response);
-				if (response.data == "OK")
+				if (response.data == "OK") {
 					$scope.$session._id = '';
+					socket.emit('signed off');
+				}
 			});
 		} else {
 			alert('You are not logged in.');
@@ -58,10 +69,7 @@ app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessi
 	}
 
 	$scope.sendMessage = function(data) {
-		console.log($scope.message);
-		console.log($scope);
 		$scope.messages.push({message: data.msg });
-		$scope.message = "";
 		socket.emit('send message', data);	
 	}
 });
