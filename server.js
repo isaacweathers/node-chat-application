@@ -4,6 +4,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var express = require('express');		
 var userModule = require('./app/models/user.js');
+var utilities = require('./app/misc/util.js');
 var path = require('path');
 var bodyParser = require('body-parser');
 var User = mongoose.model('User', userModule.userSchema);
@@ -45,17 +46,28 @@ io.sockets.on('connection', function(socket) {
 	io.emit('anon sign on', {users: connections.length });
 
 	socket.on('logged in user', function(user) {
-		socket.user = user;
+		var username = user.username;
 		connections.push(socket);
-		io.emit('logged in user', {users: connections.length, user: user});
+		utilities.findDuplicate(connections, username, function(match) {
+			socket.user = user;
+			console.log(match);
+			if (!match) {
+				io.emit('logged in user', {users: connections.length, user: user});
+			}
+		});
 	});
 
 	socket.on('signed off', function() {
 		if (socket.user != undefined) {
 			var username = socket.user.username;
 			connections.splice(connections.indexOf(socket), 1);
-			io.emit('signed off', {users: connections.length, user: username});
-		}	
+			utilities.findDuplicate(connections, username, function(match) {
+				console.log(match);
+				if (!match) {
+					io.emit('signed off', {users: connections.length, user: username});
+				}
+			});
+		}
 	});
 
 	socket.on('disconnect', function() {
