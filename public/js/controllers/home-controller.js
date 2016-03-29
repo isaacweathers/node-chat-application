@@ -2,7 +2,8 @@ app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessi
 	$scope.username = '',
 	$scope.password = '';
 	$scope.$session = $sessionStorage;
-	$scope.message;
+	$scope.message = "";
+	$scope.messages = [];
 	$scope.usersOn = 0;
 	var socket = io();
 
@@ -59,6 +60,7 @@ app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessi
 	$scope.sendMessage = function(data) {
 		console.log($scope.message);
 		console.log($scope);
+		$scope.messages.push({message: data.msg });
 		$scope.message = "";
 		socket.emit('send message', data);	
 	}
