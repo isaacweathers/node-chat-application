@@ -5,12 +5,17 @@ app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessi
 	$scope.message = "";
 	$scope.messages = [];
 	$scope.usersOn = 0;
+	
 	var socket = io();
-
+	
 	socket.on('logged in user', function(data) {
 		$scope.messages.push({message: data.user.username + " has signed on!"});
 		$scope.usersOn = data.users;	
 		$scope.$apply();
+	});
+
+	socket.on('double sign on', function(data) {
+		$scope.usersOn = data.users;
 	});
 
 	socket.on('new message', function(data) {
@@ -18,7 +23,7 @@ app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessi
 		$scope.$apply();
 	});
 
-	socket.on('anon sign on', function(data) {
+	socket.on('anon signed on', function(data) {
 		$scope.usersOn = data.users;
 		$scope.$apply();
 	});
@@ -27,7 +32,7 @@ app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessi
 		$scope.usersOn = data.users;
 		$scope.messages.push({message: data.user + " has signed off!" });
 		$scope.$apply();
-	})
+	});
 
 	$scope.register = function(user) {
 		$http.post('/register-action', user).then(function(response) {

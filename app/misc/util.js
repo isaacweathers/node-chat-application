@@ -1,5 +1,7 @@
 var exports = module.exports = {};
 
+// For universal re-usable code. 
+
 exports.findDuplicate = function(connections, username, fn) {
 	for (var i = 0; i < connections.length; i++) {
 		console.log(connections[i].user);

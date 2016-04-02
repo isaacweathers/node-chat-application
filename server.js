@@ -42,7 +42,7 @@ app.use(passport.session());
 // Web Sockets 
 
 io.sockets.on('connection', function(socket) {
-
+	console.log(connections.length);
 	io.emit('anon sign on', {users: connections.length });
 
 	socket.on('logged in user', function(user) {
@@ -50,19 +50,19 @@ io.sockets.on('connection', function(socket) {
 		connections.push(socket);
 		utilities.findDuplicate(connections, username, function(match) {
 			socket.user = user;
-			console.log(match);
 			if (!match) {
 				io.emit('logged in user', {users: connections.length, user: user});
+			} else {
+				io.emit('double sign on', {users: connections.length, user: user});
 			}
 		});
 	});
-
+	
 	socket.on('signed off', function() {
 		if (socket.user != undefined) {
 			var username = socket.user.username;
 			connections.splice(connections.indexOf(socket), 1);
 			utilities.findDuplicate(connections, username, function(match) {
-				console.log(match);
 				if (!match) {
 					io.emit('signed off', {users: connections.length, user: username});
 				}
@@ -74,12 +74,16 @@ io.sockets.on('connection', function(socket) {
 		if (socket.user != undefined) {
 			var username = socket.user.username;
 			connections.splice(connections.indexOf(socket), 1);
-			io.emit('signed off', {users: connections.length, user: username});
+			utilities.findDuplicate(connections, username, function(match) {
+				if (!match) {
+					io.emit('signed off', {users: connections.length, user: username});
+				}
+			});
 		}
 	});
 
 	socket.on('send message', function(data) {
-		io.emit('new message', {msg: data});
+		io.emit('new message ', {msg: data});
 	});
 });
 
