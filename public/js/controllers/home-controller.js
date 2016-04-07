@@ -7,7 +7,16 @@ app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessi
 	$scope.usersOn = 0;
 	
 	var socket = io();
+
+	// TO-DO: fix the refreshing error
 	
+	// $scope.init = function() {
+	// 	console.log($scope.$session._id != null);
+	// 	if ($scope.$session._id != null && $scope.usersOn < 1) {
+	// 		socket.emit('logged in user');
+	// 	}
+	// }
+
 	socket.on('logged in user', function(data) {
 		$scope.messages.push({message: data.user.username + " has signed on!"});
 		$scope.usersOn = data.users;	
@@ -74,7 +83,7 @@ app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessi
 	}
 
 	$scope.sendMessage = function(data) {
-		$scope.messages.push({message: data.msg });
+		$scope.messages.push({message: data });
 		socket.emit('send message', data);	
 	}
 });

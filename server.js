@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+
 var express = require('express');		
 var userModule = require('./app/models/user.js');
 var utilities = require('./app/misc/util.js');
@@ -42,7 +43,6 @@ app.use(passport.session());
 // Web Sockets 
 
 io.sockets.on('connection', function(socket) {
-	console.log(connections.length);
 	io.emit('anon sign on', {users: connections.length });
 
 	socket.on('logged in user', function(user) {
