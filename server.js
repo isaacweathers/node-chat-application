@@ -83,7 +83,8 @@ io.sockets.on('connection', function(socket) {
 	});
 
 	socket.on('send message', function(data) {
-		io.emit('new message', {msg: data});
+		console.log(data);
+		io.emit('new message', {msg: data.msg, username: data.username});
 	});
 });
 
@@ -136,5 +137,5 @@ app.get('/success', function(req, res) {
 });
 
 app.get('/failure', function(req, res) {
-	res.send("");
+	res.send("Invalid credentials.");
 });

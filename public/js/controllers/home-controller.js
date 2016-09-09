@@ -28,9 +28,7 @@ app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessi
 	});
 
 	socket.on('new message', function(data) {
-		console.log("new message");
-		console.log(message);
-		$scope.messages.push({message: data.msg });
+		$scope.messages.push({username: data.username, message: data.msg });
 		$scope.$apply();
 	});
 
@@ -62,8 +60,10 @@ app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessi
 				return false;
 			}
 			alert("You have signed in!");
+
 			// Initialize Session'
 			$scope.$session._id = response.data._id;
+			$scope.username = user.username;
 			socket.emit('logged in user', user);
 		});
 	},
@@ -71,7 +71,6 @@ app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessi
 	$scope.logout = function() {
 		if ($scope.$session._id) {
 			$http.post('/logout-action').then(function(response) {
-				console.log(response);
 				if (response.data == "OK") {
 					$scope.$session._id = '';
 					socket.emit('signed off');
@@ -84,6 +83,6 @@ app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessi
 	}
 
 	$scope.sendMessage = function(data) {
-		socket.emit('send message', data);	
+		socket.emit('send message', { msg: data, username: $scope.username });	
 	}
 });
