@@ -68,6 +68,7 @@ io.sockets.on('connection', function(socket) {
 			});
 		}
 	});
+	// Giff. 
 
 	socket.on('disconnect', function() {
 		if (socket.user != undefined) {
