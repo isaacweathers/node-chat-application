@@ -28,6 +28,8 @@ app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessi
 	});
 
 	socket.on('new message', function(data) {
+		console.log("new message");
+		console.log(message);
 		$scope.messages.push({message: data.msg });
 		$scope.$apply();
 	});
@@ -55,7 +57,6 @@ app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessi
 
 	$scope.login = function(user) {
 		$http.post('/login-action', user).then(function(response) {
-			console.log(response);
 			if (typeof(response.data) !== 'object') {
 				alert(response.data);
 				return false;
@@ -83,7 +84,6 @@ app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessi
 	}
 
 	$scope.sendMessage = function(data) {
-		$scope.messages.push({message: data });
 		socket.emit('send message', data);	
 	}
 });

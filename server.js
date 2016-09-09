@@ -44,7 +44,6 @@ app.use(passport.session());
 
 io.sockets.on('connection', function(socket) {
 	io.emit('anon sign on', {users: connections.length });
-
 	socket.on('logged in user', function(user) {
 		var username = user.username;
 		connections.push(socket);
@@ -57,7 +56,7 @@ io.sockets.on('connection', function(socket) {
 			}
 		});
 	});
-	
+
 	socket.on('signed off', function() {
 		if (socket.user != undefined) {
 			var username = socket.user.username;
@@ -83,7 +82,7 @@ io.sockets.on('connection', function(socket) {
 	});
 
 	socket.on('send message', function(data) {
-		io.emit('new message ', {msg: data});
+		io.emit('new message', {msg: data});
 	});
 });
 
