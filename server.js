@@ -56,7 +56,7 @@ io.sockets.on('connection', function(socket) {
 			}
 		});
 	});
-
+	
 	socket.on('signed off', function() {
 		if (socket.user != undefined) {
 			var username = socket.user.username;
@@ -124,7 +124,6 @@ app.post('/register-action', function(req, res) {
 });
 
 app.post('/login-action', passport.authenticate('local', {successRedirect: '/success', failureRedirect: '/failure'}),function(req, res) {
-
 });
 
 app.post('/logout-action', function(req, res) {

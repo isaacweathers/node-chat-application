@@ -1,5 +1,6 @@
 <div ng-if="!$session._id" class='col-lg-12'>
-	<div class='col-lg-12'>
+	<div class='col-lg-6'>
+		<h4>Register</h4>
 		<form ng-submit="register(user)" class='form-group'>
 			<fieldset class='form-group'>
 				<label for="username">Username</label><input name="username" ng-model="user.username" type="text" class='form-control'/>
@@ -10,7 +11,8 @@
 			<input type="submit" value="Register" class='btn btn-primary'/>
 		</form>
 	</div>
-	<div class='col-lg-12'>
+	<div class='col-lg-6'>
+		<h4>Login</h4>
 		<form ng-submit="login(user_login)" class='form-group'>
 			<fieldset class='form-group'>
 				<label for="username">Username</label><input name="username" ng-model="user_login.username" type="text" class='form-control'/>
@@ -31,7 +33,7 @@
 	</div>
 	<ng-pluralize count="usersOn" when="{ '0' : 'Nobody is online...', 'one' : '{} user is online!', 'other' : '{} users are online!'}"></ng-pluralize>
 	<form id="myForm" ng-submit="sendMessage(message)" style="margin-top: 10px;">
-		<input ng-model="message" class='form-control' id="message" style="margin-bottom: 10px;"/>
-		<input class="btn btn-default" type="submit" value="Send Message"/>
+		<input data-ng-model="message" class='form-control' id="message" style="margin-bottom: 10px;"/>
+		<input id="sendMessage" class="btn btn-default" type="submit" value="Send Message"/>
 	</form>
 </div>

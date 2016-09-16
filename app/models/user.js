@@ -25,6 +25,7 @@ exports.userSchema.methods.login = function (username, password, callback) {
 	query.findOne(function(err, user) {
 		if (err) callback("Something went wrong.");
 		if (user) {
+			console.log(user);
 			callback(user);
 		} else {
 			callback("Invalid credentials.");

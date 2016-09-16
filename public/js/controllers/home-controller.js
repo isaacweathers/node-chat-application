@@ -1,4 +1,4 @@
-app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessionStorage, $websocket, io) {
+app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessionStorage, $websocket, io, $window) {
 	$scope.username = '',
 	$scope.password = '';
 	$scope.$session = $sessionStorage;
@@ -39,8 +39,15 @@ app.controller('HomeCtrl', function($scope, $http, notify, $localStorage, $sessi
 
 	socket.on('signed off', function(data) {
 		$scope.usersOn = data.users;
+		console.log(data.users);
 		$scope.messages.push({message: data.user + " has signed off!" });
 		$scope.$apply();
+	});
+
+	$scope.$on('$viewContentLoaded', function() {
+		if ($scope.$session._id) {
+			
+		}
 	});
 
 	$scope.register = function(user) {
